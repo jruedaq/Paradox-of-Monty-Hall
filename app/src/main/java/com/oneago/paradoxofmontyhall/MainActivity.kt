@@ -1,12 +1,13 @@
 package com.oneago.paradoxofmontyhall
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
-import java.lang.NumberFormatException
-import java.util.ArrayList
+import androidx.appcompat.app.AppCompatActivity
+import java.util.*
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -16,11 +17,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var statistics: ImageView
     private lateinit var restart: ImageView
 
-    private val GOAT:Int = 0
-    private val CAR:Int = 1
+    private val GOAT: Int = 0
+    private val CAR: Int = 1
 
-    private var nowData: MutableList<Int> = ArrayList()
-    private var carDoor: Int = 0
+    private lateinit var nowData: MutableList<Int>
+    private var selectedDoor by Delegates.notNull<Int>()
+    private var toOpenDoor: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         x2 = findViewById(R.id.X2)
         x3 = findViewById(R.id.X3)
         statistics = findViewById(R.id.statistics)
-        restart = findViewById(R.id.restart);
+        restart = findViewById(R.id.restart)
 
         x1.setOnClickListener(this)
         x2.setOnClickListener(this)
@@ -38,31 +40,47 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         statistics.setOnClickListener(this)
         restart.setOnClickListener(this)
 
-        doorAsign()
+        doorAssign()
     }
 
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.X1 -> {
-                x1.setImageResource(imageResource(nowData[0]))
-                openDoor()
+                selectedDoor = 0
+                if (!toOpenDoor) {
+                    openGoatDoor()
+                    toOpenDoor = true
+                } else {
+                    openDoor(selectedDoor)
+                }
             }
             R.id.X2 -> {
-                x2.setImageResource(imageResource(nowData[1]))
-                openDoor()
+                selectedDoor = 1
+                if (!toOpenDoor) {
+                    openGoatDoor()
+                    toOpenDoor = true
+                } else {
+                    openDoor(selectedDoor)
+                }
             }
             R.id.X3 -> {
-                x3.setImageResource(imageResource(nowData[2]))
-                openDoor()
+                selectedDoor = 2
+                if (!toOpenDoor) {
+                    openGoatDoor()
+                    toOpenDoor = true
+                } else {
+                    openDoor(selectedDoor)
+                }
             }
             R.id.statistics -> {
                 startActivity(Intent(this, Stadistics::class.java))
             }
             R.id.restart -> {
-                doorAsign()
+                doorAssign()
                 x1.setImageResource(R.drawable.ic_puerta)
                 x2.setImageResource(R.drawable.ic_puerta)
                 x3.setImageResource(R.drawable.ic_puerta)
+                toOpenDoor = false
             }
         }
     }
@@ -77,22 +95,59 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         throw NumberFormatException("""Out of range, only binary numbers. ${number}no is valid number""")
     }
 
-    private fun doorAsign() {
+    private fun doorAssign() {
+        nowData = ArrayList()
         for (i in 0..2) {
             nowData.add(GOAT)
         }
-        carDoor = (0..2).random()
+        val carDoor = (0..2).random()
+        Log.d("Car door", carDoor.toString())
         nowData[carDoor] = CAR
+        Log.d("Door", nowData.toString())
     }
 
-    private fun openDoor() {
+    private fun openGoatDoor() {
         val random = Math.random()
-        var availableDoors = nowData
-        availableDoors.remove(carDoor)
-        if (random >= .6) {
-            print("puerta 1")
+        val goatDoors: MutableList<Int> = ArrayList()
+        var i = 0
+
+        nowData.forEach {
+            if (it == GOAT) {
+                goatDoors.add(i)
+            }
+            i++
+        }
+
+        if (random >= .5) {
+            openDoor(
+                if (goatDoors[0] != selectedDoor) {
+                    goatDoors[0]
+                } else {
+                    goatDoors[1]
+                }
+            )
         } else {
-            print("puerta 2")
+            openDoor(
+                if (goatDoors[1] != selectedDoor) {
+                    goatDoors[1]
+                } else {
+                    goatDoors[0]
+                }
+            )
+        }
+    }
+
+    private fun openDoor(door: Int) {
+        when (door) {
+            0 -> {
+                x1.setImageResource(imageResource(nowData[0]))
+            }
+            1 -> {
+                x2.setImageResource(imageResource(nowData[1]))
+            }
+            2 -> {
+                x3.setImageResource(imageResource(nowData[2]))
+            }
         }
     }
 }

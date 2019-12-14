@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="30dp"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:ignore="ContentDescription">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -17,23 +18,27 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:padding="10dp"
             android:id="@+id/X1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@drawable/ic_puerta"
-            tools:src="@drawable/ic_car"/>
+            tools:src="@drawable/ic_car" />
 
         <ImageView
+            android:padding="10dp"
             android:id="@+id/X2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_puerta" />
+            android:src="@drawable/ic_puerta"
+            tools:background="@color/selectedColor" />
 
         <ImageView
+            android:padding="10dp"
             tools:src="@drawable/ic_goat"
             android:id="@+id/X3"
             android:layout_width="wrap_content"
