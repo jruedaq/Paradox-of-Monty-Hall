@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.X1 -> {
                 selectedDoor = 0
                 if (!toOpenDoor) {
+                    x1.setBackgroundColor(resources.getColor(R.color.selectedColor))
                     openGoatDoor()
                     toOpenDoor = true
                 } else {
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.X2 -> {
                 selectedDoor = 1
                 if (!toOpenDoor) {
+                    x2.setBackgroundColor(resources.getColor(R.color.selectedColor))
                     openGoatDoor()
                     toOpenDoor = true
                 } else {
@@ -66,6 +68,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.X3 -> {
                 selectedDoor = 2
                 if (!toOpenDoor) {
+                    x3.setBackgroundColor(resources.getColor(R.color.selectedColor))
                     openGoatDoor()
                     toOpenDoor = true
                 } else {
@@ -76,6 +79,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(Intent(this, Stadistics::class.java))
             }
             R.id.restart -> {
+                x1.setBackgroundColor(0x00000000)
+                x2.setBackgroundColor(0x00000000)
+                x3.setBackgroundColor(0x00000000)
                 doorAssign()
                 x1.setImageResource(R.drawable.ic_puerta)
                 x2.setImageResource(R.drawable.ic_puerta)
@@ -140,12 +146,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun openDoor(door: Int) {
         when (door) {
             0 -> {
+                x1.setBackgroundColor(0x00000000)
                 x1.setImageResource(imageResource(nowData[0]))
             }
             1 -> {
+                x2.setBackgroundColor(0x00000000)
                 x2.setImageResource(imageResource(nowData[1]))
             }
             2 -> {
+                x3.setBackgroundColor(0x00000000)
                 x3.setImageResource(imageResource(nowData[2]))
             }
         }
